@@ -105,7 +105,18 @@
     </div>
 
   </section>
-  <section v-else>
+    <section class='pt-6' v-if='authenticated&&user.role==="PARENT"' >
+      <div class='container'></div>
+<!--      <h1 style='color: yellow;' class='title has-text-centered is-uppercase has-text-weight-bold'>your children</h1>-->
+      <div class='box has-background-dark mb-0'>
+      <h1 class='title has-text-warning has-text-centered '> your children</h1>
+      </div>
+      <div class="box has-background-light   is-small hero" >
+        <b-table  :data="children"  :columns='[{field: "id",label:"ID"},{field: "first_name",label:"first name",},{field: "last_name",label:"last name",},{field: "email",label:"email",},]' paginated per-page='5' card-layout backend-sorting></b-table>
+      </div>
+    </section>
+
+    <section v-else>
     <b-message  type="is-danger" >
       this section is reserved for parents
       maybe you need to <nuxt-link to='/login' class='has-text-info'>login</nuxt-link>
@@ -114,13 +125,6 @@
 
   </section>
 
-  <section class='pt-6'>
-    <div class='container'></div>
-    <h1 style='color: yellow;' class='title has-text-centered is-uppercase has-text-weight-bold'>your children</h1>
-    <div class="box has-background-light   is-small hero" >
-    <b-table  :data="children"  :columns='[{field: "id",label:"ID"},{field: "first_name",label:"first name",},{field: "last_name",label:"last name",},{field: "email",label:"email",},]' paginated per-page='5' card-layout backend-sorting></b-table>
-    </div>
-  </section>
 
   </div>
 
@@ -176,7 +180,7 @@ export default {
         }
 
       ).then(res=>{
-          this.$buefy.toast.open(`you just added your boy, say hello to  ${this.form.
+          this.$buefy.toast.open(`you just added your child, say hi to  ${this.form.
             first_name} !`)
          this.fetchSomething()
           // this.sendLogin()
