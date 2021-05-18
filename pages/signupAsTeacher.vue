@@ -26,12 +26,13 @@
                          required
                          v-model='form.first_name'
                          placeholder="first name"
+                         expanded
                 ></b-input>
                 <b-input type='text'
                          icon='book'
                          placeholder="last name"
                          v-model='form.last_name'
-
+                         expanded
 
                          required
 

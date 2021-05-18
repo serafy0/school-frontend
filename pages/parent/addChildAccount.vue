@@ -3,7 +3,7 @@
   <section v-if='authenticated&&user.role==="PARENT"' >
 
 
-<div class='container is-centered is-fluid'>
+<div class='container is-centered is-fluid ' >
 <!--  <b-message> {{related}}</b-message>-->
 
   <b-loading is-full-page v-model="loading" :can-cancel="true"></b-loading>
@@ -13,10 +13,10 @@
     <div class="container is-centered is-fluid" >
 
       <div class="columns  is-centered   ">
-        <div class="column is-two-fifths is-small">
+        <div class="column  is-small">
 
 
-          <div class="box has-background-dark   is-small hero" >
+          <div class="box has-background-info-dark   is-small hero" >
             <h1 class='title has-text-warning'> add a related account account</h1>
 
             <div class='container has-text-centered'>
@@ -35,6 +35,7 @@
                          required
                          v-model='form.first_name'
                          placeholder="first name"
+                         expanded
                 ></b-input>
                 <b-input type='text'
                          placeholder="last name"
@@ -42,6 +43,7 @@
 
 
                          required
+                         expanded
 
                 ></b-input>
 
@@ -160,8 +162,8 @@ export default {
         this.children = data
         return data;
       }catch (err){
-        return
         this.$buefy.toast.open(err)
+        // return
 
 
         }

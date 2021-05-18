@@ -48,7 +48,7 @@
         </b-navbar-item>
       </template>
     </b-navbar>
-    <section style='background: firebrick'>
+    <section  >
 <!--      <aside class="column is-2 section">-->
 <!--        <p class="menu-label is-hidden-touch">-->
 <!--          General-->

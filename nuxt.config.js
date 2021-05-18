@@ -4,8 +4,13 @@ export default {
   head: {
     title: 'school-frontend',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'en',
+      style:'background: firebrick'
     },
+    bodyAttrs: {
+
+    },
+
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
