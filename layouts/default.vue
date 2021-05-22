@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <b-navbar type='is-dark' spaced shadow >
+    <b-navbar type='is-dark' spaced shadow class="has-text-weight-bold">
       <template #brand>
         <b-navbar-item tag="router-link" :to="{ path: '/' }">
           <img
@@ -19,12 +19,16 @@
 
 <!--        <client-only >-->
         <b-navbar-item tag="nuxt-link" to="/parent/addChildAccount" exact-active-class="is-active" v-if='user.role==="PARENT"'>
-          Documentation
+          Add
+        </b-navbar-item>
+        <b-navbar-item tag="nuxt-link" to="/course/add-courses" exact-active-class="is-active" v-if='user.role==="TEACHER"'>
+          Courses
         </b-navbar-item>
 <!--        </client-only>-->
-        <b-navbar-dropdown label="Info" >
-          <b-navbar-item href="#">
-            About
+        <b-navbar-dropdown has-link class="has-text-weight-bold" label="add" icon='book' v-if='user.role==="TEACHER"'type='is-warning' arrowless collapsible>
+          <b-navbar-item  tag="nuxt-link" to="/course/add-courses" exact-active-class="is-active" >
+             courses
+
           </b-navbar-item>
           <b-navbar-item href="#">
             Contact

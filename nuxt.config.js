@@ -5,7 +5,7 @@ export default {
     title: 'school-frontend',
     htmlAttrs: {
       lang: 'en',
-      style:'background: firebrick'
+      style:'background: pink'
     },
     bodyAttrs: {
 

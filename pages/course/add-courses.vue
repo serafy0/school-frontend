@@ -67,10 +67,45 @@
     <div class='box has-background-dark  mb-0'>
       <h1 class='title has-text-warning has-text-centered'>your courses</h1>
     </div>
-    <div class='box '>
-      <b-table  :data="courses"  :columns='[{field: "code",label:"CODE"},{field: "name",label:"name",},{field: "description",label:"des"}]' paginated per-page='5' card-layout backend-sorting></b-table>
+    <div class='box has-background-success '>
+      <b-table :data="courses"  :columns='[{field: "code",label:"CODE"},{field: "name",label:"name",},{field: "description",label:"des"}]' paginated per-page='5' card-layout backend-sorting></b-table>
 
     </div>
+
+
+    <div >
+      <div class='container is-fluid pt-3' v-for='course in courses'>
+
+        <div class="card has-text-weight-bold has-text-light has-background-dark">
+          <header class="card-header">
+            <p class="card-header-title has-text-light">
+              {{ course.name }}
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="content has-text-centered">
+              {{course.description}}
+            </div>
+          </div>
+          <b-collapse :open="false" aria-id="contentIdForA11y1">
+            <template #trigger>
+
+            <footer class="card-footer has-text-light">
+              <a class="card-footer-item has-text-light outlined ">Save</a>
+                <a
+                  aria-controls="contentIdForA11y1"
+                  class='card-footer-item'> Edit</a>
+              <a class="card-footer-item">Delete</a>
+            </footer>
+</template>
+            <ModalForm :course='course' ></ModalForm>
+
+          </b-collapse>
+        </div>
+      </div>
+
+      </div>
+
   </section>
 
   </div>
@@ -78,11 +113,14 @@
 </template>
 
 <script>
+import ModalForm from '~/components/ModalForm'
 
 export default {
   data() {
     return {
       courses:[{}],
+      counter:0,
+
       course: {
         code:"",
         name:"",
@@ -91,6 +129,10 @@ export default {
       }
     }
   },
+  components: {
+    ModalForm
+  },
+
 
   methods:{
     async fetchRelatedCourses() {
@@ -125,7 +167,16 @@ export default {
 
      }
 
-   }
+   },
+    // cardModal(){                this.$buefy.modal.open({
+    //   parent: this,
+    //   component: ModalForm,
+    //   hasModalCard: true,
+    //   trapFocus: true,
+    //   class:"has-background-primary"
+    // })
+
+
 
 
 
