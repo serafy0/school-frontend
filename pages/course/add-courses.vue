@@ -74,7 +74,7 @@
 
 
     <div >
-      <div class='container is-fluid pt-3' v-for='course in courses'>
+      <div class='container is-fluid pt-3' v-for='(course,index) in courses' :key="index">
 
         <div class="card has-text-weight-bold has-text-light has-background-dark">
           <header class="card-header">
@@ -87,20 +87,26 @@
               {{course.description}}
             </div>
           </div>
-          <b-collapse :open="false" aria-id="contentIdForA11y1">
-            <template #trigger>
 
             <footer class="card-footer has-text-light">
               <a class="card-footer-item has-text-light outlined ">Save</a>
+
                 <a
                   aria-controls="contentIdForA11y1"
-                  class='card-footer-item'> Edit</a>
+                  class='card-footer-item'  @click='isOpen==index?isOpen=null:isOpen=index'> Edit</a>
+
+
               <a class="card-footer-item">Delete</a>
             </footer>
-</template>
+          <b-collapse              :open="isOpen == index"
+                                   @open="isOpen = index"
+                                   animation="slide"
+                                    aria-id="contentIdForA11y1">
+
             <ModalForm :course='course' ></ModalForm>
 
           </b-collapse>
+
         </div>
       </div>
 
@@ -118,6 +124,7 @@ import ModalForm from '~/components/ModalForm'
 export default {
   data() {
     return {
+      isOpen: null,
       courses:[{}],
       counter:0,
 
