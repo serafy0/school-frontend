@@ -78,12 +78,12 @@
 
         <div class="card has-text-weight-bold has-text-light has-background-dark">
           <header class="card-header">
-            <p class="card-header-title has-text-light">
+            <p class="card-header-title is-centered has-text-light ">
               {{ course.name }}
             </p>
           </header>
           <div class="card-content">
-            <div class="content has-text-centered">
+            <div class="content ">
               {{course.description}}
             </div>
           </div>
@@ -93,10 +93,10 @@
 
                 <a
                   aria-controls="contentIdForA11y1"
-                  class='card-footer-item'  @click='isOpen==index?isOpen=null:isOpen=index'> Edit</a>
+                  class='card-footer-item has-text-light' icon='pencil' @click='isOpen==index?isOpen=null:isOpen=index'> Edit</a>
 
 
-              <a class="card-footer-item">Delete</a>
+              <a class="card-footer-item" @click='deleteComponent(index,course.code)'>Delete</a>
             </footer>
           <b-collapse              :open="isOpen == index"
                                    @open="isOpen = index"
@@ -155,6 +155,20 @@ export default {
 
       }
     },
+
+    async deleteComponent(itemId,code) {
+      try {
+        const deleted_course = await this.$axios.$delete(`/course/${code}`)
+        this.$buefy.toast.open(deleted_course.name+"has been deleted ")
+        this.courses.splice(itemId, 1)
+
+      }catch (err){
+        this.$buefy.toast.open(err)
+        console.log(err)
+
+      }
+    },
+
 
 
     async addCourse(){
