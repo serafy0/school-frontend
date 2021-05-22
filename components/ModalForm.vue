@@ -34,7 +34,7 @@
     outlined
 
     native-type='submit'
-  > <strong> Add </strong></b-button>
+  > <strong> edit </strong></b-button>
 
   <!--                  <b-button type="is-primary" inverted outlined>Inverted</b-button>-->
 </b-field>
