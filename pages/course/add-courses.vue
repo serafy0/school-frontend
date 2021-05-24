@@ -16,7 +16,7 @@
                            v-model="course.code"
                            maxlength='5'
                            required
-                  >
+                           @input="course.code = course.code.toUpperCase()">
                   </b-input>
                 </b-field>
                 <b-field label="course name"
@@ -36,6 +36,8 @@
                            type="textarea"
                            v-model="course.description"
                            required
+                           maxlength='255'
+
                   >
                   </b-input>
                 </b-field>
@@ -64,25 +66,19 @@
 
   </section>
   <section v-if='this.$auth.user&&this.$auth.user.role==="TEACHER"' class='mt-5'>
-    <div class='box has-background-dark  mb-0'>
+    <div class='box  has-background-dark  mb-0'>
       <h1 class='title has-text-warning has-text-centered'>your courses</h1>
     </div>
-    <div class='box has-background-success '>
-      <b-table :data="courses"  :columns='[{field: "code",label:"CODE"},{field: "name",label:"name",},{field: "description",label:"des"}]' paginated per-page='5' card-layout backend-sorting></b-table>
-
-    </div>
 
 
-    <div >
       <div class='container is-fluid pt-3' v-for='(course,index) in courses' :key="index">
-
-        <div class="card has-text-weight-bold has-text-light has-background-dark">
+        <div class="card has-text-weight-bold has-text-light has-background-warning-dark">
           <header class="card-header">
-            <p class="card-header-title is-centered has-text-light ">
+            <p class="card-header-title is-centered is-size-3 size-large has-text-light ">
               {{ course.name }}
             </p>
           </header>
-          <div class="card-content">
+          <div class="card-content is-size-5">
             <div class="content ">
               {{course.description}}
             </div>
@@ -91,12 +87,13 @@
             <footer class="card-footer has-text-light">
               <a class="card-footer-item has-text-light outlined ">Save</a>
 
+
                 <a
                   aria-controls="contentIdForA11y1"
-                  class='card-footer-item has-text-light' icon='pencil' @click='isOpen==index?isOpen=null:isOpen=index'> Edit</a>
+                  class='card-footer-item has-text-light'  icon-left="book" @click='isOpen==index?isOpen=null:isOpen=index'> Edit</a>
 
 
-              <a class="card-footer-item" @click='deleteComponent(index,course.code)'>Delete</a>
+              <a class="card-footer-item" @click='confirmDelete(index,course.code)'>Delete</a>
             </footer>
           <b-collapse              :open="isOpen == index"
                                    @open="isOpen = index"
@@ -110,7 +107,6 @@
         </div>
       </div>
 
-      </div>
 
   </section>
 
@@ -155,6 +151,14 @@ export default {
 
       }
     },
+      confirmDelete(itemId, code) {
+        this.$buefy.dialog.confirm({
+          message: 'Are you sure you want to delete this course ??',
+          type: 'is-danger',
+          confirmText:'Yes, delete',
+          onConfirm: () => this.deleteComponent(itemId,code)
+        })},
+
 
     async deleteComponent(itemId,code) {
       try {
@@ -172,11 +176,13 @@ export default {
 
 
     async addCourse(){
+      this.course.code=this.course.code.toUpperCase();
              try {
        const data = await this.$axios.$post('/course/add',this.course);
        // this.children = data
                console.log(data)
                this.$buefy.toast.open(`course ${data.name} added`)
+               this.courses.push(data)
 
              }catch (err){
        this.$buefy.snackbar.open( {indefinite: true

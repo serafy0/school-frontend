@@ -20,6 +20,8 @@
     type="textarea"
     v-model="course.description"
     required
+    maxlength='255'
+
   >
   </b-input>
 </b-field>
@@ -49,19 +51,18 @@
 <script>
 export default {
 
-
   props: {
 
-    course:Object
+    course: Object
 
   },
   methods:{
     async editCourse(){
       try {
-        const data = await this.$axios.$put(`/course/${this.course.code}`,{name:this.course.name,description:this.description});
+        const data = await this.$axios.$put(`/course/${this.course.code}`,{name:this.course.name,description:this.course.description});
         // this.children = data
-        console.log(this.course)
         console.log(data)
+
         this.$buefy.toast.open(`course ${data.name} edited`)
 
       }catch (err){
