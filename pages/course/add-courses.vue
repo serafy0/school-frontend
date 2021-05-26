@@ -85,7 +85,7 @@
           </div>
 
             <footer class="card-footer has-text-light">
-              <a class="card-footer-item has-text-light outlined ">Save</a>
+              <a class="card-footer-item has-text-light outlined " aria-controls="contentIdForA11y12" @click='isOpen2==index?isOpen2=null:isOpen2=index'>date</a>
 
 
                 <a
@@ -103,6 +103,15 @@
             <ModalForm :course='course' ></ModalForm>
 
           </b-collapse>
+          <b-collapse              :open="isOpen2 == index"
+                                   @open="isOpen2 = index"
+                                   animation="slide"
+                                   aria-id="contentIdForA11y12">
+
+            <edit-course-time :code='course.code'></edit-course-time>
+
+          </b-collapse>
+
 
         </div>
       </div>
@@ -116,11 +125,12 @@
 
 <script>
 import ModalForm from '~/components/ModalForm'
-
+import editCourseTime from '../../components/editCourseTime'
 export default {
   data() {
     return {
       isOpen: null,
+      isOpen2: null,
       courses:[{}],
       counter:0,
 
@@ -133,7 +143,8 @@ export default {
     }
   },
   components: {
-    ModalForm
+    ModalForm,
+    editCourseTime
   },
 
 
@@ -183,6 +194,10 @@ export default {
                console.log(data)
                this.$buefy.toast.open(`course ${data.name} added`)
                this.courses.push(data)
+               this.course.code="";
+               this.course.name=""
+               this.course.description=""
+
 
              }catch (err){
        this.$buefy.snackbar.open( {indefinite: true
