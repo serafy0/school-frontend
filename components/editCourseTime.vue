@@ -15,8 +15,16 @@
       </b-field>
 
       <b-field label="time">
-<!--        <b-timepicker  v-model="course.time" inline ></b-timepicker>-->
-        <b-input type='time' v-model="course.time" inline ></b-input>
+<!--        <b-timepicker         rounded-->
+<!--                              placeholder="Click to select..."-->
+<!--                              enable-seconds-->
+<!--                              v-model="course.time"-->
+<!--                              hour-format="12"-->
+<!--                              locale="en">-->
+
+          <b-input type='time'  inline v-model="course.time"  required ></b-input>
+<!--<b-timepicker v-model='course.time'></b-timepicker>-->
+<!--        </b-timepicker>-->
 
 
       </b-field>
@@ -31,7 +39,7 @@
           outlined
 
           native-type='submit'
-        > <strong> edit </strong></b-button>
+        > <strong> add date </strong></b-button>
 
         <!--                  <b-button type="is-primary" inverted outlined>Inverted</b-button>-->
       </b-field>
@@ -80,6 +88,8 @@ return {
         console.log(this.course.weekday)
         const data = await this.$axios.$post(`course/set_in_table/${this.code}`,this.course);
         // this.children = data
+        this.course.weekday=""
+        this.course.time=""
         console.log(data)
 
         this.$buefy.toast.open(`course date set`)

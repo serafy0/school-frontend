@@ -72,7 +72,7 @@
 
 
       <div class='container is-fluid pt-3' v-for='(course,index) in courses' :key="index">
-        <div class="card has-text-weight-bold has-text-light has-background-warning-dark">
+        <div class="card has-text-weight-bold has-text-light has-background-dark">
           <header class="card-header">
             <p class="card-header-title is-centered is-size-3 size-large has-text-light ">
               {{ course.name }}
@@ -83,34 +83,35 @@
               {{course.description}}
             </div>
           </div>
-
-            <footer class="card-footer has-text-light">
-              <a class="card-footer-item has-text-light outlined " aria-controls="contentIdForA11y12" @click='isOpen2==index?isOpen2=null:isOpen2=index'>date</a>
-
-
-                <a
-                  aria-controls="contentIdForA11y1"
-                  class='card-footer-item has-text-light'  icon-left="book" @click='isOpen==index?isOpen=null:isOpen=index'> Edit</a>
-
-
-              <a class="card-footer-item" @click='confirmDelete(index,course.code)'>Delete</a>
-            </footer>
           <b-collapse              :open="isOpen == index"
-                                   @open="isOpen = index"
+                                   @open="isOpen = index;isOpen2=null"
                                    animation="slide"
-                                    aria-id="contentIdForA11y1">
+                                   aria-id="contentIdForA11y1">
 
             <ModalForm :course='course' ></ModalForm>
 
           </b-collapse>
           <b-collapse              :open="isOpen2 == index"
-                                   @open="isOpen2 = index"
+                                   @open="(isOpen2 = index)&&(isOpen=null)"
                                    animation="slide"
                                    aria-id="contentIdForA11y12">
 
             <edit-course-time :code='course.code'></edit-course-time>
 
           </b-collapse>
+
+
+          <footer class="card-footer has-text-light">
+              <a class="card-footer-item has-text-light outlined has-background-info " aria-controls="contentIdForA11y12" @click='(isOpen2==index)?isOpen2=null:isOpen2=index'>date</a>
+
+
+                <a
+                  aria-controls="contentIdForA11y1"
+                  class='card-footer-item has-background-light '  icon-left="book" @click='(isOpen==index)?isOpen=null:isOpen=index'> Edit</a>
+
+
+              <a class="card-footer-item has-background-warning" @click='confirmDelete(index,course.code)'>Delete</a>
+            </footer>
 
 
         </div>
@@ -165,7 +166,7 @@ export default {
       confirmDelete(itemId, code) {
         this.$buefy.dialog.confirm({
           message: 'Are you sure you want to delete this course ??',
-          type: 'is-danger',
+          type: 'is-warning has-text-primary',
           confirmText:'Yes, delete',
           onConfirm: () => this.deleteComponent(itemId,code)
         })},
