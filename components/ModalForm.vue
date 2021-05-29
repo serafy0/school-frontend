@@ -34,7 +34,6 @@
     size='is-large'
 
     outlined
-
     native-type='submit'
   > <strong> edit </strong></b-button>
 
@@ -53,7 +52,8 @@ export default {
 
   props: {
 
-    course: Object
+    course: Object,
+    is_open:Object
 
   },
   methods:{
@@ -62,6 +62,8 @@ export default {
         const data = await this.$axios.$put(`/course/${this.course.code}`,{name:this.course.name,description:this.course.description});
         // this.children = data
         console.log(data)
+        this.$emit('update:is_open', null)
+        console.log(this.is_open)
 
         this.$buefy.toast.open(`course ${data.name} edited`)
 

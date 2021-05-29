@@ -78,17 +78,17 @@
               {{ course.name }}
             </p>
           </header>
-          <div class="card-content is-size-5">
-            <div class="content " style= 'word-wrap: break-word;'>
+          <div class="card-content has-background-grey-light is-size-5">
+            <div  style='word-wrap: break-word;'>
               {{course.description}}
             </div>
           </div>
           <b-collapse              :open="isOpen == index"
-                                   @open="isOpen = index;isOpen2=null"
+                                   @open="isOpen = index"
                                    animation="slide"
                                    aria-id="contentIdForA11y1">
 
-            <ModalForm :course='course' ></ModalForm>
+            <ModalForm :is_open.sync="isOpen" :course='course' ></ModalForm>
 
           </b-collapse>
           <b-collapse              :open="isOpen2 == index"
@@ -96,7 +96,7 @@
                                    animation="slide"
                                    aria-id="contentIdForA11y12">
 
-            <edit-course-time :code='course.code'></edit-course-time>
+            <edit-course-time  :code='course.code'></edit-course-time>
 
           </b-collapse>
 
@@ -107,7 +107,7 @@
 
                 <a
                   aria-controls="contentIdForA11y1"
-                  class='card-footer-item   '  icon-left="book" @click='(isOpen==index)?isOpen=null:isOpen=index'> Edit</a>
+                  class='card-footer-item   '  icon-left="book" @click='isOpen==index?isOpen=null:isOpen=index'> Edit</a>
 
 
               <a class="card-footer-item  " @click='confirmDelete(index,course.code)'>Delete</a>
@@ -166,7 +166,7 @@ export default {
       confirmDelete(itemId, code) {
         this.$buefy.dialog.confirm({
           message: 'Are you sure you want to delete this course ??',
-          type: 'is-warning has-text-primary',
+          type: 'is-dark',
           confirmText:'Yes, delete',
           onConfirm: () => this.deleteComponent(itemId,code)
         })},
