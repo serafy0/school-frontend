@@ -24,6 +24,9 @@
         <b-navbar-item tag="nuxt-link" to="/course/add-courses" exact-active-class="is-active" v-if='user.role==="TEACHER"'>
           Courses
         </b-navbar-item>
+        <b-navbar-item tag="nuxt-link" to="/course/find_courses" exact-active-class="is-active" v-if='user'>
+          find courses
+        </b-navbar-item>
 <!--        </client-only>-->
         <b-navbar-dropdown has-link class="has-text-weight-bold" label="add" icon='book' v-if='user.role==="TEACHER"'type='is-warning' arrowless collapsible>
           <b-navbar-item  tag="nuxt-link" to="/course/add-courses" exact-active-class="is-active" >

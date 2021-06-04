@@ -23,7 +23,9 @@
 
                 >
                   <b-input
-                           v-model="course.name"
+                    maxlength='255'
+                    has-counter="false"
+                    v-model="course.name"
                            required
                   >
                   </b-input>
@@ -71,21 +73,20 @@
     </div>
 
 
-      <div class='container is-fluid pt-3' v-for='(course,index) in courses' :key="index">
-        <div class="card has-text-weight-bold  ">
-          <header class="card-header has-background-grey-dark  ">
-            <p class="card-header-title is-centered is-size-3 has-text-light size-large">
+      <div class='container is-fluid pt-3' v-for='(course,index) in courses' ref="courses" :key="index">
+        <div class="card has-text-weight-bold  "  >
+          <header class="card-header has-background-grey-dark " >
+            <p class="card-header-title is-centered is-size-3 has-text-light size-large" >
               {{ course.name }}
             </p>
           </header>
           <div class="card-content has-background-grey-light is-size-5">
-            <div  style='word-wrap: break-word;'>
+            <div class='content' style='word-wrap: break-word;'>
               {{course.description}}
             </div>
           </div>
           <b-collapse              :open="isOpen == index"
                                    @open="isOpen = index"
-                                   animation="slide"
                                    aria-id="contentIdForA11y1">
 
             <ModalForm :is_open.sync="isOpen" :course='course' ></ModalForm>
@@ -94,7 +95,8 @@
           <b-collapse              :open="isOpen2 == index"
                                    @open="(isOpen2 = index)&&(isOpen=null)"
                                    animation="slide"
-                                   aria-id="contentIdForA11y12">
+                                   aria-id="contentIdForA11y12"
+          >
 
             <edit-course-time  :code='course.code'></edit-course-time>
 
@@ -102,12 +104,12 @@
 
 
           <footer class="card-footer ">
-              <a class="card-footer-item  " aria-controls="contentIdForA11y12" @click='(isOpen2==index)?isOpen2=null:isOpen2=index'>date</a>
+              <a class="card-footer-item  " aria-controls="contentIdForA11y12" @click='clickCardButton(index)'>date</a>
 
 
                 <a
                   aria-controls="contentIdForA11y1"
-                  class='card-footer-item   '  icon-left="book" @click='isOpen==index?isOpen=null:isOpen=index'> Edit</a>
+                  class='card-footer-item   '  icon-left="book" @click='clickCardButton(index)'> Edit</a>
 
 
               <a class="card-footer-item  " @click='confirmDelete(index,course.code)'>Delete</a>
@@ -150,6 +152,21 @@ export default {
 
 
   methods:{
+    clickCardButton(index){
+      if(this.isOpen==index){this.isOpen=null;
+      }else{this.isOpen=index;
+        this.scrollToElement(index)
+      }
+    },
+    scrollToElement(index) {
+      const el = this.$refs.courses[index];
+
+      if (el) {
+        // Use el.scrollIntoView() to instantly scroll to the element
+        el.scrollIntoView();
+        // el.scrollTop = el.scrollHeight;
+      }
+    },
     async fetchRelatedCourses() {
       try {
         const data = await this.$axios.$get('/course/teacher/taught_by');
@@ -175,7 +192,8 @@ export default {
     async deleteComponent(itemId,code) {
       try {
         const deleted_course = await this.$axios.$delete(`/course/${code}`)
-        this.$buefy.toast.open(deleted_course.name+"has been deleted ")
+        const message=deleted_course.name+"has been deleted "
+        this.$buefy.snackbar.open({message:message,type:"is-danger", duration:9000,queue:false,position:"is-top"})
         this.courses.splice(itemId, 1)
 
       }catch (err){

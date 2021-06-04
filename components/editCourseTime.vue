@@ -6,13 +6,26 @@
       <b-field label="weekday"
 
       >
-        <b-select v-model="course.weekday" placeholder="Select a day" required>
-
-          <option value="MONDAY">MONDAY</option>
-          <option value="MONDAY">MONDAY</option>
-          <option value="MONDAY">MONDAY</option>
+<!--        <b-select  placeholder="Select a day" required>-->
+<!--          <div v-for='week in weekdays>-->
+<!--          <option ' value="weekday">{{ week }}</option>-->
+<!--          </div>-->
+<!--        </b-select>-->
+        <b-select placeholder="Select" v-model="course.weekday" required>
+          <option value='' disabled selected>choose a week</option>
+          <option
+            v-for="(week) in weekdays"
+            :value="week">
+            {{ week.toLowerCase() }}
+          </option>
         </b-select>
+
       </b-field>
+
+
+
+
+
 
       <b-field label="time">
 <!--        <b-timepicker         rounded-->
