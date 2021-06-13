@@ -117,27 +117,35 @@ export default {
 
   methods:{
     async signUp(){
-      this.$axios.$post("/signup",
-        {
-          first_name: this.form.first_name ,
-          last_name:this.form.last_name,
-          email:(this.form.email).toLowerCase(),
-          password:this.form.password
-        }
+      try {
+        console.log(this.form.email)
+        await this.$axios.$post("/signup",
+          {
+            first_name: this.form.first_name,
+            last_name: this.form.last_name,
+            email: (this.form.email).toLowerCase(),
+            password: this.form.password
+          }
+        )
+        // .then(res=>{
+        this.$buefy.toast.open(`you just signed up, welcome ${this.form.first_name} !`)
+        await this.sendLogin()
+        console.log(this.form.email + "worked")
+      }catch (e) {
 
-      ).then(res=>{
-        this.$buefy.toast.open(`you just signed up, welcome ${this.form.
-        first_name} !`)
-        this.sendLogin()
 
-        }
-      ).catch (e=>{
+        // }
+        // ).catch (e=>{
         // if(!e.status){
         //   this.$buefy.snackbar.open("network error")
         //
         // }else {
-          this.$buefy.snackbar.open(e.response.data)
-      });
+        console.log(e.response.data)
+        this.$buefy.snackbar.open(e.response.data)
+        console.log(this.form.email + "error")
+      }
+
+      // });
 
     },
     async sendLogin(){
@@ -156,8 +164,13 @@ export default {
 
       }
       catch (e){
-        this.$buefy.toast.open(e)
-        console.log(e)
+        if(!e.response){
+          this.$buefy.snackbar.open("network error, please try again later")
+
+        }else {
+          this.$buefy.snackbar.open(e.response.data)
+        }
+
       }
 
       // this.$toast.info()
