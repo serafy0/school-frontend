@@ -177,7 +177,7 @@ export default {
         {
           first_name: this.form.first_name ,
           last_name:this.form.last_name,
-          email:(this.form.email).toLowerCase(),
+          email:this.form.email.toLowerCase(),
           password:this.form.password
         }
 
