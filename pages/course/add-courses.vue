@@ -11,12 +11,15 @@
                 <b-field label="Course code"
 
                 >
-                  <b-input type="text"
+                  <b-input
+                           @keydown.native.space.prevent
+
+                           type="text"
                            icon="book"
                            v-model="course.code"
                            maxlength='5'
                            required
-                           @input="course.code = course.code.toUpperCase()">
+                           @input="course.code = course.code.toUpperCase().replace(' ','')">
                   </b-input>
                 </b-field>
                 <b-field label="course name"
@@ -26,7 +29,7 @@
                     maxlength='255'
                     has-counter="false"
                     v-model="course.name"
-                           required
+                    required
                   >
                   </b-input>
                 </b-field>
@@ -67,26 +70,38 @@
 
 
   </section>
-  <section v-if='this.$auth.user&&this.$auth.user.role==="TEACHER"' class='mt-5'>
-    <div class='box  has-background-dark  mb-0'>
+    <div class='box  has-background-dark  mt-6 mb-0'>
       <h1 class='title has-text-warning has-text-centered'>your courses</h1>
     </div>
 
+    <section v-if='this.$auth.user&&this.$auth.user.role==="TEACHER"' class=' columns is-multiline mt-0'>
 
-      <div class='container is-fluid pt-3' v-for='(course,index) in courses' ref="courses" :key="index">
+      <div class='column is-half is-desktop  pt-3' v-for='(course,index) in courses' ref="courses" :key="index">
         <div class="card has-text-weight-bold  "  >
           <header class="card-header has-background-grey-dark " >
-            <p class="card-header-title is-centered is-size-3 has-text-light size-large" >
+            <nuxt-link :to="'/course/'+course.code"  class="card-header-title is-centered is-size-3 has-text-light size-large" >
               {{ course.name }}
-            </p>
+
+            </nuxt-link>
+<!--            <nuxt-link class="card-footer-item" :to="'/course/'+course.code" >code</nuxt-link>-->
+
+
+
           </header>
+
+
           <div class="card-content has-background-grey-light is-size-5">
             <div class='content' style='word-wrap: break-word;'>
-              {{course.description}}
+              <p class='is-size-4'>{{course.description}}</p>
+              <p class='is-size-6  has-text-right has-text-grey-dark'> course code: {{course.code}}</p>
+
             </div>
+
           </div>
           <b-collapse              :open="isOpen == index"
                                    @open="isOpen = index"
+
+
                                    aria-id="contentIdForA11y1">
 
             <ModalForm :is_open.sync="isOpen" :course='course' ></ModalForm>
@@ -94,7 +109,6 @@
           </b-collapse>
           <b-collapse              :open="isOpen2 == index"
                                    @open="(isOpen2 = index)&&(isOpen=null)"
-                                   animation="slide"
                                    aria-id="contentIdForA11y12"
           >
 
@@ -104,12 +118,12 @@
 
 
           <footer class="card-footer ">
-              <a class="card-footer-item  " aria-controls="contentIdForA11y12" @click='clickCardButton(index)'>date</a>
+              <a class="card-footer-item  " aria-controls="contentIdForA11y12" @click='isOpen2=clickCardButton(index,isOpen2)'>date</a>
 
 
                 <a
                   aria-controls="contentIdForA11y1"
-                  class='card-footer-item   '  icon-left="book" @click='clickCardButton(index)'> Edit</a>
+                  class='card-footer-item   '  icon-left="book" @click='isOpen=clickCardButton(index,isOpen)'> Edit</a>
 
 
               <a class="card-footer-item  " @click='confirmDelete(index,course.code)'>Delete</a>
@@ -145,6 +159,7 @@ export default {
       }
     }
   },
+
   components: {
     ModalForm,
     editCourseTime
@@ -152,11 +167,16 @@ export default {
 
 
   methods:{
-    clickCardButton(index){
-      if(this.isOpen==index){this.isOpen=null;
-      }else{this.isOpen=index;
+    clickCardButton(index,is_open){
+      if(is_open==index){
+        is_open=null;
+        return is_open
+
+      }else{is_open=index;
         this.scrollToElement(index)
       }
+      return is_open
+
     },
     scrollToElement(index) {
       const el = this.$refs.courses[index];
@@ -206,8 +226,12 @@ export default {
 
 
     async addCourse(){
-      this.course.code=this.course.code.toUpperCase();
-             try {
+      //clear whitespace
+      this.course.code=this.course.code.toUpperCase().replace(/ /g,'');
+      // this.course.name=this.course.name.replace(/ /g,'')
+      // this.course.description=this.course.description.replace(/ /g,'')
+
+      try {
        const data = await this.$axios.$post('/course/add',this.course);
        // this.children = data
                console.log(data)
@@ -229,13 +253,6 @@ export default {
      }
 
    },
-    // cardModal(){                this.$buefy.modal.open({
-    //   parent: this,
-    //   component: ModalForm,
-    //   hasModalCard: true,
-    //   trapFocus: true,
-    //   class:"has-background-primary"
-    // })
 
 
 
