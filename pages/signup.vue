@@ -19,7 +19,7 @@
 
 
             >
-              <b-field  label='name' custom-class='has-text-light' expanded>
+              <b-field   label='name' custom-class='has-text-light' expanded>
                 <b-input type='text'
                          label='first name'
                          required
@@ -29,8 +29,6 @@
                 <b-input type='text'
                          placeholder="last name"
                          v-model='form.last_name'
-
-
                          required
 
                 ></b-input>
@@ -73,20 +71,11 @@
                   native-type='submit'
                 > <strong>Sign Up</strong></b-button>
 
-                <!--                  <b-button type="is-primary" inverted outlined>Inverted</b-button>-->
               </b-field>
 
             </form>
 
           </div>
-
-
-<!--          <b-button @click='logout'>-->
-<!--            logout-->
-<!--          </b-button>-->
-
-
-
 
 
 
@@ -133,19 +122,11 @@ export default {
         console.log(this.form.email + "worked")
       }catch (e) {
 
-
-        // }
-        // ).catch (e=>{
-        // if(!e.status){
-        //   this.$buefy.snackbar.open("network error")
-        //
-        // }else {
         console.log(e.response.data)
         this.$buefy.snackbar.open(e.response.data)
         console.log(this.form.email + "error")
       }
 
-      // });
 
     },
     async sendLogin(){
@@ -172,16 +153,6 @@ export default {
         }
 
       }
-
-      // this.$toast.info()
-      // await this.$auth.fetchUser()
-
-
-
-      // } catch (e) {
-      // // do something on failure
-      //
-      // }
 
     },
     async logout(){

@@ -1,4 +1,5 @@
 <template>
+
   <div class='box'>
     <form
       @submit.prevent="editCourseDate">
@@ -6,13 +7,8 @@
       <b-field label="weekday"
 
       >
-<!--        <b-select  placeholder="Select a day" required>-->
-<!--          <div v-for='week in weekdays>-->
-<!--          <option ' value="weekday">{{ week }}</option>-->
-<!--          </div>-->
-<!--        </b-select>-->
         <b-select placeholder="Select" v-model="course.weekday" required>
-          <option value='' disabled selected>choose a week</option>
+          <option value='' disabled selected>choose a day</option>
           <option
             v-for="(week) in weekdays"
             :value="week">
@@ -28,16 +24,8 @@
 
 
       <b-field label="time">
-<!--        <b-timepicker         rounded-->
-<!--                              placeholder="Click to select..."-->
-<!--                              enable-seconds-->
-<!--                              v-model="course.time"-->
-<!--                              hour-format="12"-->
-<!--                              locale="en">-->
 
           <b-input type='time'  inline v-model="course.time"  required ></b-input>
-<!--<b-timepicker v-model='course.time'></b-timepicker>-->
-<!--        </b-timepicker>-->
 
 
       </b-field>
@@ -97,6 +85,7 @@ return {
   },
   methods:{
     async editCourseDate(){
+
       try {
         console.log(this.course.weekday)
         const data = await this.$axios.$post(`course/set_in_table/${this.code}`,this.course);
