@@ -3,7 +3,8 @@
 
   <section>
 
-<div class='box'>
+    <div class='container is-align-content-center'>
+<div class='box '>
 
               <form
     @submit.prevent="addCourse">
@@ -65,7 +66,11 @@
 
 
 
+
+
+
               </form>
+</div>
 </div>
 
 
@@ -100,6 +105,8 @@
           </div>
           <b-collapse              :open="isOpen == index"
                                    @open="isOpen = index"
+                                   animation="slide"
+
 
 
                                    aria-id="contentIdForA11y1">
@@ -109,6 +116,8 @@
           </b-collapse>
           <b-collapse              :open="isOpen2 == index"
                                    @open="(isOpen2 = index)&&(isOpen=null)"
+                                   animation="slide"
+
                                    aria-id="contentIdForA11y12"
           >
 
@@ -162,7 +171,7 @@ export default {
 
   components: {
     ModalForm,
-    editCourseTime
+    editCourseTime,
   },
 
 
@@ -194,7 +203,9 @@ export default {
         this.courses = data
       }catch (err){
         console.log(err)
-        this.$buefy.toast.open(err)
+        if(err.response) {
+          this.$buefy.toast.open({indefinite: true,queue:false,message:err.response.data},)
+        }
         // return
 
 
@@ -235,7 +246,7 @@ export default {
        const data = await this.$axios.$post('/course/add',this.course);
        // this.children = data
                console.log(data)
-               this.$buefy.toast.open(`course ${data.name} added`)
+               this.$buefy.toast.open({message:`course ${data.name} added`,type:"is-success"})
                this.courses.push(data)
                this.course.code="";
                this.course.name=""
@@ -243,8 +254,8 @@ export default {
 
 
              }catch (err){
-       this.$buefy.snackbar.open( {indefinite: true
-                 ,message:err.response.data.message})
+       this.$buefy.snackbar.open( {indefinite: true,queue:false
+                 ,message:err.response.data.message,type:"is-danger"})
                console.log(err.response.data.message)
 
        // return
