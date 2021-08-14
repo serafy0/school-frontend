@@ -1,18 +1,13 @@
 <template>
 <div>
   <div class='columns is-centered'>
-    <b-field class='column is-half' >
-    <b-input v-model='search' has-icon-left icon='magnify'  @input='searchForCourses' expanded rounded></b-input>
-<!--    <b-button type='is-dark' @click='searchForCourses' ' ></b-button>-->
+    <b-field class='column is-half'>
+    <b-input v-model='search' has-icon-left icon='magnify' lazy="true" @input='searchForCourses' expanded rounded></b-input>
     </b-field>
   </div>
 
 
 <div class='columns is-vcentered is-multiline' v-if='search!==""'>
-<!--  <div v-if='courses!==[]' class="box has-background-light   is-small hero" >-->
-<!--    <b-table  :data="courses"  :columns='[{field: "code",label:"code"},{field: "name",label:"name",},{field: "description",label:"description",},]' paginated per-page='5' card-layout backend-sorting></b-table>-->
-<!--  </div>-->
-<!--  <div>{{courses}}</div>-->
     <div class=' column is-narrow cardheader is-one-third-desktop is-half-tablet  mt-2 pt-3' v-for='(course,index) in courses' ref="courses" :key="index">
       <div class="card has-text-weight-bold "   >
         <header class="card-header has-background-grey-dark card-head" >
@@ -22,6 +17,7 @@
 
           </nuxt-link>
         </header>
+
         <nuxt-link :to="'/course/'+course.code">
 
         <div class="card-content has-text-dark has-background-grey-light is-size-5">
@@ -33,6 +29,8 @@
 
         <b-collapse              :open="isOpen == index"
                                  @open="isOpen = index"
+                                 animation="slide"
+
                                  aria-id="contentIdForA11y1">
 
           <ModalForm :is_open.sync="isOpen" :course='course' ></ModalForm>
@@ -50,48 +48,81 @@
 
 
         <footer v-if='$store.state.auth.user&&$store.state.auth.user.id===course.teacher_id' class="card-footer ">
-          <a class="card-footer-item  " aria-controls="contentIdForA11y12" @click='clickCardButton(index)'>date</a>
+          <a class="card-footer-item  " aria-controls="contentIdForA11y12" @click='isOpen2=clickCardButton(index,isOpen2)'>date</a>
 
 
           <a
             aria-controls="contentIdForA11y1"
-            class='card-footer-item   '  icon-left="book" @click='clickCardButton(index)'> Edit</a>
+            class='card-footer-item   '  icon-left="book" @click='isOpen=clickCardButton(index,isOpen)'> Edit</a>
 
 
           <a class="card-footer-item  " @click='confirmDelete(index,course.code)'>Delete</a>
         </footer>
         <footer v-else-if='$store.state.auth.user&&$store.state.auth.user.role==="STUDENT"'>
-          <a class="card-footer-item  " @click='registerStudentToCourse(course.code)'>register</a>
+          <a class="card-footer-item" @click='registerStudentToCourse(course.code)'>register</a>
 
         </footer>
 
+
       </div>
+
     </div>
+
+
+</div>
+
+
+  <div v-if='courses==""'>
+    <b-message has-icon type='is-info' v-if='search===""'>
+      type in something on the search bar
+    </b-message>
+    <b-message has-icon type='is-info' v-else>
+    looks like we didn't find anything that matches what you were looking for
+    </b-message>
+  </div>
+
+  <div v-if='LoadingCourses'>
+    <b-loading  v-model="LoadingCourses" >
+
+    </b-loading>
+
   </div>
 </div>
+
+
 </template>
 
 <script>
 
-export default {
+import ModalForm from '../../components/ModalForm'
 
+export default {
+  components: { ModalForm
+  },
   data() {
     return {
       isOpen: null,
       isOpen2: null,
       search:"",
       courses:[],
-      hover:false
+      hover:false,
+      LoadingCourses:false
     }
 
   },
 
+
   methods: {
-    clickCardButton(index){
-      if(this.isOpen==index){this.isOpen=null;
-      }else{this.isOpen=index;
+    clickCardButton(index,is_open){
+      if(is_open==index){
+        is_open=null;
+        return is_open
+
+      }else{is_open=index;
         this.scrollToElement(index)
       }
+      return is_open
+
     },
     scrollToElement(index) {
       const el = this.$refs.courses[index];
@@ -107,6 +138,8 @@ export default {
       // if(this.search===""){
       //   this.search=
       // }
+      this.LoadingCourses=true
+
       try {
         const data = await this.$axios.$get(`/course/find/${this.search}`);
         if(data===""){
@@ -117,12 +150,19 @@ export default {
           this.courses = data
         }
       } catch (err) {
-        console.log(err)
-        this.$buefy.toast.open(err.response.message)
+        if(err.response) {
+          console.log(err)
+          this.$buefy.toast.open(err.response.message)
+        }else {
+          this.$buefy.toast.open("Connection Error: please try again later")
+
+        }
         // return
 
 
       }
+      this.LoadingCourses=false
+
 
 
     },
@@ -178,19 +218,3 @@ export default {
 }
 </script>
 
-<style>
-.cardheader:hover{
-
-  border: 3px solid deeppink;
-  /*  padding-top: 40px;*/
-  /*padding-bottom: 40px;*/
-  /*padding-left: 10px;*/
-  -webkit-transform:translateY(-18px);
-  transform: translateY(-18px);
-  transition-duration: 500ms;
-  /*transition: border-width 0.6s ease;*/
-  /*animation-duration: 100000ms;*/
-
-
-   }
-</style>
