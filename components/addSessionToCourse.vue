@@ -15,6 +15,17 @@
         <b-datetimepicker position='is-top-right' v-model="session_date"></b-datetimepicker>
 
       </b-field>
+      <b-field>
+        <b-checkbox v-model="recurring">
+          repeated
+        </b-checkbox>
+      </b-field>
+
+      <b-field v-if='recurring' label="number of repeats">
+<!--        <b-timepicker v-model='session_date'></b-timepicker>-->
+        <b-input min='1' max='8' type="number" class='is-small' position='is-top-right' v-model="recurringNum"></b-input>
+
+      </b-field>
 
       <b-field postion="centered" class='has-text-centered'><!-- Label left empty for spacing -->
         <b-button
@@ -26,7 +37,8 @@
           outlined
 
           native-type='submit'
-        > <strong> add date </strong></b-button>
+        >
+          <strong> add date </strong></b-button>
 
         <!--                  <b-button type="is-primary" inverted outlined>Inverted</b-button>-->
       </b-field>
@@ -52,7 +64,9 @@ export default {
 
   data() {
     return {
-      session_date:null
+      session_date:null,
+      recurringNum:0,
+      recurring:false
 
     }
   },
@@ -61,11 +75,18 @@ export default {
       {
 
         try {
-          const data = await this.$axios.$post(`/session`, {course_code:course_id,session_date:date});
-          console.log(data)
-          this.course.sessions.push(data)
 
+          const promises = []
+          for(let i =0; i<=this.recurringNum; i++) {
+            date.setDate(date.getDate() + i * 7);
 
+            const data = await this.$axios.$post(`/session`, { course_code: course_id, session_date: date});
+            promises.push(data)
+            console.log(data)
+            this.course.sessions.push(data)
+          }
+
+          await Promise.all(promises)
           this.$buefy.toast.open(`new session created`)
 
         } catch (err) {

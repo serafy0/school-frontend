@@ -53,7 +53,7 @@
     <section v-if='course.sessions' class='mb-4'>
       <div class='columns is-centered is-vcentered is-multiline'>
 
-      <div v-for='session in course.sessions' >
+      <div v-for='(session,index) in course.sessions' >
 
           <div class='column'>
 
@@ -62,9 +62,15 @@
               <p class='has-text-weight-bold' v-if='new Date(session.session_date)<Date.now()'>passed</p>
 
               <p class='is-size-3'> {{session.session_number}}</p>
-              <p class='is-size-3'> date :{{ new Date(session.session_date).toLocaleDateString()}}</p>
-              <p class='is-size-3'> time :{{ new Date(session.session_date).toLocaleTimeString()}}</p>
+              <p class='is-size-3'> {{ new Date(session.session_date).toLocaleString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}}</p>
+              <p class='is-size-3'>{{ new Date(session.session_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}}</p>
 
+              <b-button v-if='$store.state.auth.user&&course.teacher_id===$store.state.auth.user.id' rounded type='is-danger' @click='confirmDeleteSession(session.session_id,index)'> delete </b-button>
 
 
             </div>
@@ -152,6 +158,23 @@ export default {
 
       }
     },
+    async removeSession(session_id,index){
+      try{
+        const data = await this.$axios.$delete(`/session/${session_id}`);
+       console.log(this.course)
+      }catch (err){
+        console.log(err)
+        this.$buefy.toast.open(err.message)
+
+      }
+    },
+    confirmDeleteSession(session_id,index) {
+      this.$buefy.dialog.confirm({
+        message: 'Are you sure you want to delete this date',
+        type: 'is-danger is-light',
+        confirmText:'Yes, delete',
+        onConfirm: () => this.removeSession(session_id,index)
+      })},
     confirmDelete(date_id,index) {
       this.$buefy.dialog.confirm({
         message: 'Are you sure you want to delete this date',
