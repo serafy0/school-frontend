@@ -4,7 +4,7 @@
       <template #brand>
         <b-navbar-item tag="router-link" :to="{ path: '/' }">
           <img
-            src="https://raw.githubusercontent.com/buefy/buefy/dev/static/img/buefy-logo.png"
+            src="https://res.cloudinary.com/dalisapxa/image/upload/v1633344935/school/cover_a69noc.png"
             alt="Lightweight UI components for Vue.js based on Bulma"
           />
         </b-navbar-item>
@@ -75,10 +75,6 @@
     </b-navbar>
     <section>
       <div class="container column is-10 is-fluid">
-        <br />
-        <p>user :{{ user }}</p>
-        <p>auth: {{ authenticated }}</p>
-
         <nuxt />
       </div>
     </section>
