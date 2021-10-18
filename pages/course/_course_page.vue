@@ -189,6 +189,7 @@ export default {
       try {
         const data = await this.$axios.$delete(`/session/${session_id}`)
         console.log(this.course)
+        this.course.sessions.splice(index, 1)
       } catch (err) {
         console.log(err)
         this.$buefy.toast.open(err.message)
