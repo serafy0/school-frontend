@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div>
-      {{ session }}
-    </div>
     <div v-if="$store.state.auth.user.role === 'STUDENT'">
       <b-button @click="registerStudentToCourse(session.course.code)">register to course</b-button>
     </div>
@@ -25,7 +22,28 @@
     >
       detailed >
       <template #detail="props">
-        <div>{{ props.row }}</div>
+        <div class="m-2 p-2 columns is-multiline">
+          <div v-if="props.row.feedbacks">feedback received for this session</div>
+          <div v-for="feedback in props.row.feedbacks" :key="feedback.id" class="column">
+            <div class="card m-2">
+              <header classs="card-header">
+                <div class="card-header-title">
+                  <b-rate v-model="feedback.rating" disabled> </b-rate>
+                </div>
+              </header>
+              <div class="card-content">
+                {{ feedback.feedback_text }}
+              </div>
+              <footer v-if="$store.state.auth.user.id === feedback.written_by" class="card-footer">
+                <a
+                  class="card-footer-item"
+                  @click="confirmDelete(feedback.id, 'feedback', props.row.id)"
+                  >Delete</a
+                >
+              </footer>
+            </div>
+          </div>
+        </div>
         <FeedbackFrom :student_id="props.row.id" :session="session" />
       </template>
     </b-table>
@@ -86,28 +104,31 @@ export default {
       }
     },
 
-    async removeSession(session_id, index) {
+    async removeItem(id, type, owner_id) {
       try {
-        const data = await this.$axios.$delete(`/session/${session_id}`)
+        const data = await this.$axios.$delete(`/${type}/${id}`)
+        if (type == 'feedback') {
+          console.log('session', this.session.course.registered_students)
+          console.log('owner', owner_id)
+          this.session.course.registered_students.forEach((student) => {
+            if (student.id == owner_id) {
+              student.feedbacks = student.feedbacks.filter((feedback) => feedback.id != id)
+              console.log('helllo')
+              console.log(student.feedbacks)
+            }
+          })
+        }
       } catch (err) {
         console.log(err)
         this.$buefy.toast.open(err.message)
       }
     },
-    confirmDeleteSession(session_id, index) {
+    confirmDelete(id, type, owner_id) {
       this.$buefy.dialog.confirm({
-        message: 'Are you sure you want to delete this date',
+        message: `Are you sure you want to delete this ${type}`,
         type: 'is-danger is-light',
         confirmText: 'Yes, delete',
-        onConfirm: () => this.removeSession(session_id, index),
-      })
-    },
-    confirmDelete(date_id, index) {
-      this.$buefy.dialog.confirm({
-        message: 'Are you sure you want to delete this date',
-        type: 'is-danger is-light',
-        confirmText: 'Yes, delete',
-        onConfirm: () => this.removeDate(date_id, index),
+        onConfirm: () => this.removeItem(id, type, owner_id),
       })
     },
 
