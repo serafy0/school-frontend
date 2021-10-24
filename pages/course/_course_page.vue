@@ -69,18 +69,26 @@
       </div>
     </section>
     <section v-if="course.sessions" class="mb-4">
-      <div class="columns is-centered is-vcentered is-multiline">
+      <div class="columns is-centered is-multiline">
         <div v-for="(session, index) in course.sessions" :key="index">
-          <div class="column">
+          <div class="column is-narrow">
             <div class="box has-text-centered has-background-warning">
-              <p v-if="new Date(session.session_date) > Date.now()" class="has-text-weight-bold">
+              <b-tag
+                v-if="new Date(session.session_date) > Date.now()"
+                close-icon="check-outline"
+                type="is-primary"
+                class="has-text-weight-bold"
+              >
                 upcoming
-              </p>
-              <p v-if="new Date(session.session_date) < Date.now()" class="has-text-weight-bold">
-                passed
-              </p>
+                <b-icon icon="clock-outline" size="is-small"> </b-icon>
+              </b-tag>
 
-              <p class="is-size-3">{{ session.session_number }}</p>
+              <b-tag v-else class="has-text-weight-bold" type="is-success is-light">
+                finished
+
+                <b-icon icon="check-outline" size="is-small"> </b-icon>
+              </b-tag>
+
               <p class="is-size-3">
                 {{
                   new Date(session.session_date).toLocaleString('en-US', {
