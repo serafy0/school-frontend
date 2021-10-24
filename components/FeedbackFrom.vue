@@ -3,7 +3,7 @@
     {{ student_id }}
     <form @submit.prevent="giveFeedBackToStudent">
       <b-field label="rating">
-        <b-rate v-model="feedback.rating"> </b-rate>
+        <b-rate v-model="feedback.rating" required> </b-rate>
       </b-field>
 
       <b-field label="give a comment">
@@ -48,12 +48,16 @@ export default {
           student_id: this.student_id,
         })
         // this.children = data
-        console.log(data)
-
+        if (this.session) {
+          this.session.course.registered_students.forEach((student) => {
+            if (student.id === this.student_id) {
+              student.feedbacks.push(data)
+            }
+          })
+        }
         this.$buefy.toast.open(`session feedback given `)
       } catch (err) {
-        this.$buefy.snackbar.open({ indefinite: true, message: err.response.data.message })
-        console.log(err.response.data.message)
+        this.$buefy.snackbar.open({ indefinite: true, message: err })
 
         // return
       }
