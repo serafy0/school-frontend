@@ -15,15 +15,17 @@
       paginated
       per-page="5"
       detailed
+      :opened-detailed="opened_items"
+      detail-key="id"
       aria-next-label="Next page"
       aria-previous-label="Previous page"
       aria-page-label="Page"
       aria-current-label="Current page"
+      @click="clickOnItem($event)"
     >
       detailed >
       <template #detail="props">
         <div class="m-2 p-2 columns is-multiline">
-          <div v-if="props.row.feedbacks">feedback received for this session</div>
           <div v-for="feedback in props.row.feedbacks" :key="feedback.id" class="column">
             <div class="card m-2">
               <header classs="card-header">
@@ -68,6 +70,7 @@ export default {
       isOpen2: null,
       courses: [{}],
       counter: 0,
+      opened_items: [],
       session: {
         session_id: '',
         course_code: '',
@@ -103,6 +106,13 @@ export default {
         this.$buefy.toast.open(err)
       }
     },
+    clickOnItem(e) {
+      if (this.opened_items.includes(e.id)) {
+        this.opened_items = this.opened_items.filter((item) => item !== e.id)
+        return
+      }
+      this.opened.push(e.id)
+    },
 
     async removeItem(id, type, owner_id) {
       try {
@@ -113,8 +123,6 @@ export default {
           this.session.course.registered_students.forEach((student) => {
             if (student.id == owner_id) {
               student.feedbacks = student.feedbacks.filter((feedback) => feedback.id != id)
-              console.log('helllo')
-              console.log(student.feedbacks)
             }
           })
         }
