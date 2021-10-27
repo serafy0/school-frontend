@@ -116,6 +116,14 @@
               >
                 delete
               </b-button>
+              <b-button
+                tag="router-link"
+                :to="`/session/${session.session_id}`"
+                rounded
+                type="is-primary"
+              >
+                see more
+              </b-button>
             </div>
           </div>
         </div>
