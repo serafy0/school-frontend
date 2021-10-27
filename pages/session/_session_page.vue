@@ -128,9 +128,8 @@ export default {
           })
         }
         if (type === 'session') {
-          const course_code = this.session.course.course_code
-          this.session = {}
-          this.$router.push('/course/', course_code)
+          const course_code = this.session.course.code
+          this.$router.push(`/course/${course_code}`)
         }
       } catch (err) {
         console.log(err)
