@@ -3,6 +3,9 @@
     <div v-if="$store.state.auth.user.role === 'STUDENT'">
       <b-button @click="registerStudentToCourse(session.course.code)">register to course</b-button>
     </div>
+    <div v-if="$store.state.auth.user.id === session.course.teacher_id">
+      <b-button @click="confirmDelete(session.session_id, 'session')"> delete session</b-button>
+    </div>
 
     <b-table
       ref="table"
@@ -111,20 +114,23 @@ export default {
         this.opened_items = this.opened_items.filter((item) => item !== e.id)
         return
       }
-      this.opened.push(e.id)
+      this.opened_items.push(e.id)
     },
 
     async removeItem(id, type, owner_id) {
       try {
         const data = await this.$axios.$delete(`/${type}/${id}`)
-        if (type == 'feedback') {
-          console.log('session', this.session.course.registered_students)
-          console.log('owner', owner_id)
+        if (type === 'feedback') {
           this.session.course.registered_students.forEach((student) => {
             if (student.id == owner_id) {
               student.feedbacks = student.feedbacks.filter((feedback) => feedback.id != id)
             }
           })
+        }
+        if (type === 'session') {
+          const course_code = this.session.course.course_code
+          this.session = {}
+          this.$router.push('/course/', course_code)
         }
       } catch (err) {
         console.log(err)
