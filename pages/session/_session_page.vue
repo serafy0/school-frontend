@@ -1,10 +1,14 @@
 <template>
   <div>
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">session {{ session.session_number }}</p>
+
+        <p class="subtitle">{{ session.course.name }}</p>
+      </div>
+    </section>
     <div v-if="$store.state.auth.user.role === 'STUDENT'">
       <b-button @click="registerStudentToCourse(session.course.code)">register to course</b-button>
-    </div>
-    <div v-if="$store.state.auth.user.id === session.course.teacher_id">
-      <b-button @click="confirmDelete(session.session_id, 'session')"> delete session</b-button>
     </div>
 
     <b-table
@@ -26,7 +30,6 @@
       aria-current-label="Current page"
       @click="clickOnItem($event)"
     >
-      detailed >
       <template #detail="props">
         <div class="m-2 p-2 columns is-multiline">
           <div v-for="feedback in props.row.feedbacks" :key="feedback.id" class="column">
